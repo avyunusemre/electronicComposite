@@ -1,4 +1,5 @@
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -61,31 +62,39 @@ public class Main {
                 .setShortName("ex8")
                 .build();
 
+        ElectronicComposite e9 = new ElectronicComposite.EeBuilder("Example9", "longExample9")
+                .setParentEe(e8)
+                .setEeLogicalConnectors(List.of(c2, c3))
+                .setShortName("ex9")
+                .build();
+
         p1.addChildElements(List.of(e1, e2, e3, e4));
         p2.addChildElements(List.of(e5, e6));
         p3.addChildElements(List.of(e7));
         e7.addChildElements(List.of(e8));
-
-        List<ElectronicComposite> electronicComposites = List.of(e1, e2, e3, e4, e5, e6, e8);
+        e8.addChildElements(List.of(e9));
+        List<ElectronicComposite> electronicComposites = List.of(p1, p2, p3);
 
         printInfos(setResult(electronicComposites));
 
     }
 
 
-    public static Set<ElectronicComposite> setResult(List<ElectronicComposite> electronicComposites) {
-        Set<ElectronicComposite> electronicCompositeSet = new HashSet<>();
-        for (ElectronicComposite e : electronicComposites) {
-            electronicCompositeSet.add(e);
-            if (e.hasParent()) {
-                electronicCompositeSet.add(e.getParentEE());
-            }
-            if (e.hasChildren()) {
-                setResult(e.getChildEEs());
+    public static Set<ElectronicComposite> setResult(List<ElectronicComposite> parents) {
+        Set<ElectronicComposite> compositeSet = new HashSet<>();
+        for (ElectronicComposite parent : parents) {
+            addCompositeAndChildrenToSet(parent, compositeSet);
+        }
+        return compositeSet;
+    }
+
+
+    private static void addCompositeAndChildrenToSet(ElectronicComposite composite, Set<ElectronicComposite> compositeSet) {
+        if (compositeSet.add(composite) && composite.hasChildren()) {
+            for (ElectronicComposite child : composite.getChildEEs()) {
+                addCompositeAndChildrenToSet(child, compositeSet);
             }
         }
-
-        return electronicCompositeSet;
     }
 
     public static void printInfos(Set<ElectronicComposite> electronicComposites) {
@@ -99,4 +108,5 @@ public class Main {
         }
 
     }
+
 }
