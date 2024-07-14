@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 import java.util.List;
 
-public class ElectronicComposite {
+public class ElectronicComposite implements Composite {
 
     private final String name;
 
-    private final List<ElectronicComposite> childEEs;
+    private List<ElectronicComposite> childEEs = new ArrayList<>();
 
     private final List<Connector> eeLogicalConnectors;
 
@@ -14,6 +15,12 @@ public class ElectronicComposite {
 
     private final ElectronicComposite parentEe;
 
+
+    @Override
+    public void addChildElements(List<ElectronicComposite> elements) {
+        childEEs.addAll(elements);
+    }
+
     public static class EeBuilder {
 
         //required parameters
@@ -21,17 +28,15 @@ public class ElectronicComposite {
         private final String longName;
 
         //optional parameters
-        List<ElectronicComposite> childElements;
-        List<Connector> eeLogicalConnectors;
-        String shortName;
-        ElectronicComposite parentEe;
+        private List<Connector> eeLogicalConnectors;
+        private String shortName;
+        private ElectronicComposite parentEe;
 
         public EeBuilder(ElectronicComposite oldObject) {
             this.name = oldObject.name;
             this.longName = oldObject.longName;
             this.parentEe = oldObject.parentEe;
             this.shortName = oldObject.shortName;
-            this.childElements = oldObject.childEEs;
             this.eeLogicalConnectors = oldObject.eeLogicalConnectors;
         }
 
@@ -40,10 +45,6 @@ public class ElectronicComposite {
             this.longName = longName;
         }
 
-        public EeBuilder setChildElements(List<ElectronicComposite> childElements) {
-            this.childElements = childElements;
-            return this;
-        }
 
         public EeBuilder setEeLogicalConnectors(List<Connector> eeLogicalConnectors) {
             this.eeLogicalConnectors = eeLogicalConnectors;
@@ -104,9 +105,12 @@ public class ElectronicComposite {
         return "NO PARENT";
     }
 
+    public boolean hasParent() {
+        return parentEe != null;
+    }
+
     public ElectronicComposite(EeBuilder builder) {
         this.name = builder.name;
-        this.childEEs = builder.childElements;
         this.eeLogicalConnectors = builder.eeLogicalConnectors;
         this.shortName = builder.shortName;
         this.longName = builder.longName;

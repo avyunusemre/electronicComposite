@@ -61,19 +61,12 @@ public class Main {
                 .setShortName("ex8")
                 .build();
 
-        p1 = new ElectronicComposite.EeBuilder(p1)
-                .setChildElements(List.of(e1, e2, e3, e4)).build();
+        p1.addChildElements(List.of(e1, e2, e3, e4));
+        p2.addChildElements(List.of(e5, e6));
+        p3.addChildElements(List.of(e7));
+        e7.addChildElements(List.of(e8));
 
-        p2 = new ElectronicComposite.EeBuilder(p2)
-                .setChildElements(List.of(e5, e6)).build();
-
-        p3 = new ElectronicComposite.EeBuilder(p3)
-                .setChildElements(List.of(e7)).build();
-
-        e7 = new ElectronicComposite.EeBuilder(e7).
-                setChildElements(List.of(e8)).build();
-
-        List<ElectronicComposite> electronicComposites = List.of(p1, p2, p3, e1, e2, e3, e4, e5, e6, e7, e8);
+        List<ElectronicComposite> electronicComposites = List.of(e1, e2, e3, e4, e5, e6, e8);
 
         printInfos(setResult(electronicComposites));
 
@@ -84,10 +77,14 @@ public class Main {
         Set<ElectronicComposite> electronicCompositeSet = new HashSet<>();
         for (ElectronicComposite e : electronicComposites) {
             electronicCompositeSet.add(e);
+            if (e.hasParent()) {
+                electronicCompositeSet.add(e.getParentEE());
+            }
             if (e.hasChildren()) {
                 setResult(e.getChildEEs());
             }
         }
+
         return electronicCompositeSet;
     }
 
